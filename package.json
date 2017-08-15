@@ -1,0 +1,19 @@
+{
+  "name": "testtask",
+  "version": "1.0.0",
+  "description": "test task ",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/obstacles2905/myrepo.git"
+  },
+  "author": "Pismenniy Nikita",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/obstacles2905/myrepo/issues"
+  },
+  "homepage": "https://github.com/obstacles2905/myrepo#readme"
+}

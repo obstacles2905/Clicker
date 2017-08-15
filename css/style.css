@@ -1,0 +1,85 @@
+.menu {
+    position: relative;
+    height: 300px;
+}
+.start {
+   position: absolute;
+   margin: 0px auto;
+   top: 63%;
+   left: 24%;
+}
+.new {
+    position: absolute;
+    margin: 0px auto;
+    top: 63%;
+    left: 5%;
+}
+.pause {
+    position: absolute;
+    margin: 0px auto;
+    top: 63%;
+    left: 40%;
+}
+.game {
+    height: 500px;  
+}
+.result {
+    height: 400px;
+    width: 200px;
+    position: relative;
+    margin-top: -25%;
+    left: 1000px;      
+}
+.field {
+    position: relative;
+    margin-top: 20px;
+    height: 450px;
+}
+
+.field > div {
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    
+}
+/*labels*/
+#total_score {
+    position: absolute;
+    margin: 0px auto;
+    top: 70%;
+    left: 82%;
+}
+#timer {
+    position: absolute;
+    margin: 0px auto;
+    top: 70%;
+    left: 65%;
+/*    top: 200px auto;*/
+}
+#points {
+    position: absolute;
+    margin: 0px auto;
+    top: 60%;
+    left: 65%;
+}
+#timeleft {
+    position: absolute;
+    margin: 0px auto;
+    top: 60%;
+    left: 80%;
+}
+#resulttable {
+    top: 7%;
+    right: 1%;
+    border: 2px solid black;
+    position: absolute;
+
+}
+#resulttable > tr {
+    border: 2px solid black;
+}
+h1 {
+    position: absolute;
+    margin: 0px auto;
+    top: 5%;
+}
