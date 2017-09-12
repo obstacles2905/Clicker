@@ -1,0 +1,255 @@
+  <!DOCTYPE html>
+  <html>
+    <head>
+       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+       <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	   <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css" rel="stylesheet">
+<!--       <link href="/css/style.css" type="text/css" rel="stylesheet">-->
+        <style>
+            .menu {
+                position: relative;
+                height: 300px;
+            }
+            .start {
+               position: absolute;
+               margin: 0px auto;
+               top: 63%;
+               left: 24%;
+            }
+            .new {
+                position: absolute;
+                margin: 0px auto;
+                top: 63%;
+                left: 5%;
+            }
+            .pause {
+                position: absolute;
+                margin: 0px auto;
+                top: 63%;
+                left: 40%;
+            }
+            .game {
+                height: 500px;  
+            }
+            .result {
+                height: 400px;
+                width: 200px;
+                position: relative;
+                margin-top: -25%;
+                left: 1000px;      
+            }
+            .field {
+                position: relative;
+                margin-top: 20px;
+                height: 450px;
+            }
+
+            .field > div {
+                width: 30px;
+                height: 30px;
+                display: inline-block;
+
+            }
+            /*labels*/
+            #total_score {
+                position: absolute;
+                margin: 0px auto;
+                top: 70%;
+                left: 82%;
+            }
+            #timer {
+                position: absolute;
+                margin: 0px auto;
+                top: 70%;
+                left: 65%;
+            /*    top: 200px auto;*/
+            }
+            #points {
+                position: absolute;
+                margin: 0px auto;
+                top: 60%;
+                left: 80%;
+            }
+            #timeleft {
+                position: absolute;
+                margin: 0px auto;
+                top: 60%;
+                left: 65%;
+            }
+            #resulttable {
+                top: 7%;
+                right: 1%;
+                border: 2px solid black;
+                position: absolute;
+
+            }
+            #resulttable > tr {
+                border: 2px solid black;
+            }
+            h1 {
+                position: absolute;
+                margin: 0px auto;
+                top: 5%;
+            }
+        
+        </style>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+
+    <body>
+        
+        <div class="container">
+            <div class="row">
+                 
+                <div class="col s9 m9 l9 menu indigo lighten-5">
+                    <h1>Test task</h1>
+                    <a class="waves-effect waves-light btn blue accent-1 start">Start</a>
+                    <a class="waves-effect waves-light btn blue accent-1 new">New game</a>
+                    <a class="waves-effect waves-light btn blue accent-1 pause">Pause</a>
+                    <h3 id="total_score"> </h3>
+                    <h3 id="timer"></h3>
+                    <h6 id="points">Points</h6>
+                    <h6 id="timeleft">Time left</h6>
+                    
+
+                </div>
+                
+                <div class="col s9 m9 l9 game red lighten-4" >
+                    <div class="col s12 m12 l12 field light-blue lighten-5" id="field"> </div>
+                    
+                </div>
+
+                <div class="col s3 m3 l3 result pink lighten-5"> 
+                        <table id="resulttable">
+                            <tr>
+                                <th>Name</th>
+                                <th>Score</th>
+                            </tr>
+                        
+                        </table>
+                </div>
+            </div>
+            
+        </div>
+    
+        <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
+<!--        <script type="text/javascript" src="/js/script.js" ></script>-->
+        <script>
+            const COLOR_ARR = ["red", "blue", "yellow", "green"];
+            var total_score = 0;
+            var newBtn;
+            var timer = 60;
+            var testTimer;
+            var posXArr;
+            var posYArr;
+            var result;
+
+            $(document).ready(function() {
+                document.getElementById("total_score").innerText = total_score;
+                document.getElementById("timer").innerText = timer; 
+            })
+
+
+            $("div").on("click", ".field > div", function() { //классификация очков за блок каждого цвета
+                $(this).remove();
+                switch ($(this).css("background-color")) {
+                    case "green": total_score += 1;
+                        break;
+                    case "blue": total_score += 2;
+                        break;
+                    case "yellow": total_score += 3;
+                        break;
+                    case "red": total_score += 4;
+                        break;
+                    default: break;
+                }
+                document.getElementById("total_score").innerText = total_score;
+            })
+
+            $(".new").click(function() { //обработка нажатия кнопки новой игры
+
+                $('.new').data('clicked', true);
+                testTimer = setInterval(timerFunc, 1000);
+
+                for (var i = 0; i<40; i++) { 
+                    createBlock();
+                }
+
+            })
+
+            $(".pause").click(function() { //обработка нажатия кнопки паузы
+                if ($(".new").data('clicked')) {
+                    window.clearInterval(testTimer);
+                    $('.field > div').prop("disabled", true);
+                }
+                else {
+                    alert("First press the 'New Game' button");
+                }
+            })
+
+            $(".start").click(function() { //обработка нажатия кнопки продолжения игры
+                if ($('.new').data('clicked')) {
+                    testTimer = setInterval(timerFunc, 1000);
+                    $('.field > div').prop("disabled", false);
+                }
+                else {
+                    alert("First press the 'New Game' button");
+                }
+
+            })
+
+            function createBlock() { //функция создания и отрисовки блоков
+                    var randColor = COLOR_ARR[Math.floor(Math.random() * COLOR_ARR.length)];
+                    var posX = (Math.random() * ($(".field").width() - 30)).toFixed();
+                    var posY = (Math.random() * ($(".field").height() - 30)).toFixed();
+                    newBtn = document.createElement('div');
+                    newBtn.className = "block";
+                    newBtn.style.backgroundColor = randColor;
+                    newBtn.style.position = "absolute";
+                    newBtn.style.left = posX+'px';
+                    newBtn.style.top = posY+'px';
+                    document.getElementById("field").appendChild(newBtn);
+            }
+            function addRecord(name, record) { //Функция добавления нового рекорда в таблицу
+                let newTR = document.createElement('tr');
+                let newName = document.createElement('td');
+                let newScore = document.createElement('td');
+                newName.innerText = name;
+                newScore.innerText = total_score;
+                newTR.appendChild(newName);
+                newTR.appendChild(newScore);
+                document.getElementById("resulttable").appendChild(newTR);
+            }
+
+            function timerFunc() { //функция генерации новых блоков с течением времени
+                let minSpawn = 0;
+                let maxSpawn = 2;
+                --timer;
+                document.getElementById("timer").innerText = timer;
+
+                if (timer % 5 == 0) { //создание и добавление новых блоков каждые пять секунд
+                    let spawnCoef = Math.floor(Math.random() * (maxSpawn - minSpawn + 1));
+                    for (var i = 0; i< spawnCoef; i++) {
+                        createBlock();
+                    }
+                }
+                if (timer == 0) { //действия, происходящие после истечения времени
+                    window.clearInterval(testTimer);
+                    result = prompt("The game is over, your score is: "+total_score, "Player");
+                    addRecord(result);
+                    total_score = 0;
+                    timer = 60;
+                    document.getElementById("total_score").innerText = total_score;
+                    document.getElementById("timer").innerText = timer;
+                    $.cookie(result, total_score);
+                    $('.block').remove();
+                    $('.new').data('clicked', false);
+
+                }
+
+            }
+        </script>
+    </body>
+  </html>
+        
