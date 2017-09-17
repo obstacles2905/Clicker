@@ -10,6 +10,7 @@ var result;
 $(document).ready(function() {
     document.getElementById("total_score").innerText = total_score;
     document.getElementById("timer").innerText = timer; 
+    getData();
 })
 
 
@@ -98,16 +99,56 @@ function timerFunc() { //функция генерации новых блоко
     }
     if (timer == 0) { //действия, происходящие после истечения времени
         window.clearInterval(testTimer);
-        result = prompt("The game is over, your score is: "+total_score, "Player");
-        addRecord(result);
+        result = prompt("The game is over, your score is: "+total_score, "Player");    
+        postData(total_score, result);
+        $.getJSON('http://localhost:8080/json/results.json', function(data){
+          var items = ['<h5>Scoreboard</h5>'];
+          console.log("get data called");
+          $.each(data, function(key, val){
+            items.push('<ul id="score">' + (key+1+'.') + ' ' + val +'</ul>');
+          });
+          $('<li/>', {
+            'id': 'result',
+            html: items.join('')
+          }).appendTo('body');
+
+        });
         total_score = 0;
         timer = 60;
         document.getElementById("total_score").innerText = total_score;
         document.getElementById("timer").innerText = timer;
-        $.cookie(result, total_score);
         $('.block').remove();
         $('.new').data('clicked', false);
         
     }
     
+}
+function getData() {
+    $.getJSON('http://localhost:8080/json/results.json', function(data){
+      var items = ['<h5>Scoreboard</h5>'];
+      console.log("get data called");
+      $.each(data, function(key, val){
+        items.push('<ul id="score">' + (key+1+'.') + ' ' + val +'</ul>');
+      });
+      $('<li/>', {
+        'id': 'result',
+        html: items.join('')
+      }).appendTo('body');
+
+    });
+}
+
+function postData(name, score) {
+    console.log(name + " " +score);
+    var data = {};
+    data[score] = name;
+    $.ajax({
+       url: 'http://localhost:8080',
+       type: 'POST',
+       contentType: 'application/json',
+        data: JSON.stringify(data),
+        success: function(data){
+            console.log(data);
+        }
+    });
 }

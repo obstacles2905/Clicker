@@ -68,18 +68,27 @@
     top: 60%;
     left: 80%;
 }
-#resulttable {
-    top: 7%;
-    right: 1%;
-    border: 2px solid black;
-    position: absolute;
-
-}
-#resulttable > tr {
-    border: 2px solid black;
-}
 h1 {
     position: absolute;
     margin: 0px auto;
     top: 5%;
+}
+#result {
+
+    background-color: #ffcdd2;
+    position: absolute;
+    top: 1%;
+    right: 12%;
+    height: 800px;
+    width: 300px;
+    
+}
+#score {
+    border: 2px double black;
+    padding: 7px;
+    font-size: 16px;
+}
+#scoreboard {
+    font-size: 20px;
+    text-align: center;
 }
