@@ -2,7 +2,7 @@
   "name": "testtask",
   "version": "1.0.0",
   "description": "test task ",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "npm start"
   },
@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/obstacles2905/myrepo/issues"
   },
-  "homepage": "https://github.com/obstacles2905/myrepo#readme"
+  "homepage": "https://github.com/obstacles2905/myrepo#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.7",
+    "underscore": "^1.12.1"
+  }
 }
