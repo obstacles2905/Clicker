@@ -1,6 +1,8 @@
 const express = require("express");
 const bodyParser = require('body-parser');
 const router = require('./src/routes/gameRouter');
+// require("dotenv").config({path: ".env"});
+
 const port = 8082;
 
 const app = express();
@@ -11,6 +13,7 @@ app.use(bodyParser.json());
 app.use("/", router);
 
 app.listen(port, () => {
+    console.log("////////////a", process.env.APPLICATION_PORT);
   console.info(`Server is running on ${port}`);
 });
 
@@ -22,4 +25,8 @@ sigs.forEach((sig) => {
             process.exit(0);
         });
     });
+});
+
+process.on("error", () => {
+    process.exit(0);
 });
