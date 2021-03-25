@@ -1,18 +1,16 @@
 const COLORS = ["red", "blue", "yellow", "green"];
-const CELLS_AMOUNT = 40;
+const BLOCKS_AMOUNT = 40;
 
 let totalScore = 0;
 let newBtn;
 let timer = 60;
 let testTimer;
-let result;
 
 $(document).ready(function() {
     document.getElementById("totalScore").innerText = totalScore;
-    document.getElementById("timer").innerText = timer; 
-    getData();
+    document.getElementById("timer").innerText = timer;
+    renderScoreboardTable();
 });
-
 
 $("div").on("click", ".field > div", function() { //классификация очков за блок каждого цвета
     $(this).remove();
@@ -30,16 +28,14 @@ $("div").on("click", ".field > div", function() { //классификация �
     document.getElementById("totalScore").innerText = totalScore;
 });
 
-$(".new").click(function() { //обработка нажатия кнопки новой игры
+$(".new").click(function() {
     $('.new').data('clicked', true);
     testTimer = setInterval(timerFunc, 1000);
-     
-    for (let i = 0; i < CELLS_AMOUNT; i++) {
-        createBlock();
-    }
+
+    generateOriginalBlocks();
 });
 
-$(".pause").click(function() { //обработка нажатия кнопки паузы
+$(".pause").click(function() {
     if ($(".new").data('clicked')) {
         window.clearInterval(testTimer);
         $('.field > div').prop("disabled", true);
@@ -49,7 +45,7 @@ $(".pause").click(function() { //обработка нажатия кнопки 
     }
 });
 
-$(".start").click(function() { //обработка нажатия кнопки продолжения игры
+$(".start").click(function() {
     if ($('.new').data('clicked')) {
         testTimer = setInterval(timerFunc, 1000);
         $('.field > div').prop("disabled", false);
@@ -59,7 +55,13 @@ $(".start").click(function() { //обработка нажатия кнопки 
     }
 });
 
-function createBlock() {
+function generateOriginalBlocks() {
+    for (let i = 0; i < BLOCKS_AMOUNT; i++) {
+        generateBlock();
+    }
+}
+
+function generateBlock() {
     const randColor = COLORS[Math.floor(Math.random() * COLORS.length)];
 
     const posX = (Math.random() * ($(".field").width() - 30)).toFixed();
@@ -71,6 +73,7 @@ function createBlock() {
     newBtn.style.position = "absolute";
     newBtn.style.left = `${posX}px`;
     newBtn.style.top = `${posY}px`;
+
     document.getElementById("field").appendChild(newBtn);
 }
 function addRecordToTable(name, record) {
@@ -84,53 +87,51 @@ function addRecordToTable(name, record) {
     document.getElementById("resulttable").appendChild(newTR);
 }
 
-function timerFunc() { //функция генерации новых блоков с течением времени
-    let minBlocksAmountToSpawn = 0;
-    let maxBlocksAmountToSpawn = 2;
-
+function timerFunc() {
     --timer;
     document.getElementById("timer").innerText = timer;
-    
+
+    let minBlocksAmountToSpawn = 0;
+    let maxBlocksAmountToSpawn = 2;
     if (timer % 5 === 0) {
-        let spawnCoef = Math.floor(Math.random() * (maxBlocksAmountToSpawn - minBlocksAmountToSpawn + 1));
+        const spawnCoef = Math.floor(Math.random() * (maxBlocksAmountToSpawn - minBlocksAmountToSpawn + 1));
         for (let i = 0; i < spawnCoef; i++) {
-            createBlock();
+            generateBlock();
         }
     }
 
-    if (timer === 0) { //действия, происходящие после истечения времени
+    if (timer === 0) { 
         window.clearInterval(testTimer);
-        result = prompt("The game is over, your score is: " + totalScore, "Player");
 
-        postData(totalScore, result);
-        $.getJSON('http://localhost:8082/json/results.json', function(data){
-          const items = ['<h5>Scoreboard</h5>'];
+        const playerName = prompt("The game is over, your score is: " + totalScore, "Player");
 
-          $.each(data, function(key, val){
-            items.push('<ul id="score">' + (key+1+'.') + ' ' + val +'</ul>');
-          });
-          $('<li/>', {
-            'id': 'result',
-            html: items.join('')
-          }).appendTo('body');
+        sendGameStats(playerName, totalScore);
 
-        });
+        renderScoreboardTable();
 
-        totalScore = 0;
-        timer = 60;
+        reset();
 
         document.getElementById("totalScore").innerText = totalScore;
         document.getElementById("timer").innerText = timer;
         $('.block').remove();
         $('.new').data('clicked', false);
     }
-    
 }
-function getData() {
+
+function sendGameStats(name, score) {
+    $.ajax({
+        url: 'http://localhost:8082/',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({[name]: score}),
+    });
+}
+
+function renderScoreboardTable() {
     $.getJSON('http://localhost:8082/json/results.json', function(data){
       const items = ['<h5>Scoreboard</h5>'];
 
-      $.each(data, function(key, val){
+      $.each(data, function(key, val) {
         items.push('<ul id="score">' + (key+1+'.') + ' ' + val +'</ul>');
       });
       $('<li/>', {
@@ -141,17 +142,8 @@ function getData() {
     });
 }
 
-function postData(name, score) {
-    console.log(name + " " + score);
-    var data = {};
-    data[score] = name;
-    $.ajax({
-       url: 'http://localhost:8082',
-       type: 'POST',
-       contentType: 'application/json',
-        data: JSON.stringify(data),
-        success: function(data){
-            console.log(data);
-        }
-    });
+function reset() {
+    totalScore = 0;
+    timer = 60;
 }
+

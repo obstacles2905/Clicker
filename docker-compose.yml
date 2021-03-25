@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  postgres:
+    image: postgres
+    hostname: clicker-postgres
+    restart: always
+    ports:
+      - 5432:5432
+    volumes:
+      - $HOME/postgresql:/var/lib/postgresql
+    environment:
+      POSTGRES_DB: clicker
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin

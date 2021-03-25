@@ -56,13 +56,13 @@
     left: 65%;
 /*    top: 200px auto;*/
 }
-#points {
+#timeleft {
     position: absolute;
     margin: 0px auto;
     top: 60%;
     left: 65%;
 }
-#timeleft {
+#points {
     position: absolute;
     margin: 0px auto;
     top: 60%;
