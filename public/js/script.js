@@ -2,7 +2,6 @@ const COLORS = ["red", "blue", "yellow", "green"];
 const BLOCKS_AMOUNT = 40;
 
 let totalScore = 0;
-let newBtn;
 let timer = 60;
 let testTimer;
 
@@ -12,7 +11,7 @@ $(document).ready(function() {
     renderScoreboardTable();
 });
 
-$("div").on("click", ".field > div", function() { //классификация очков за блок каждого цвета
+$("div").on("click", ".field > div", function() {
     $(this).remove();
     switch ($(this).css("background-color")) {
         case "green": totalScore += 1;
@@ -67,14 +66,14 @@ function generateBlock() {
     const posX = (Math.random() * ($(".field").width() - 30)).toFixed();
     const posY = (Math.random() * ($(".field").height() - 30)).toFixed();
 
-    newBtn = document.createElement('div');
-    newBtn.className = "block";
-    newBtn.style.backgroundColor = randColor;
-    newBtn.style.position = "absolute";
-    newBtn.style.left = `${posX}px`;
-    newBtn.style.top = `${posY}px`;
+    const block = document.createElement('div');
+    block.className = "block";
+    block.style.backgroundColor = randColor;
+    block.style.position = "absolute";
+    block.style.left = `${posX}px`;
+    block.style.top = `${posY}px`;
 
-    document.getElementById("field").appendChild(newBtn);
+    document.getElementById("field").appendChild(block);
 }
 function addRecordToTable(name, record) {
     let newTR = document.createElement('tr');
@@ -91,16 +90,16 @@ function timerFunc() {
     --timer;
     document.getElementById("timer").innerText = timer;
 
-    let minBlocksAmountToSpawn = 0;
-    let maxBlocksAmountToSpawn = 2;
-    if (timer % 5 === 0) {
+    const minBlocksAmountToSpawn = 0;
+    const maxBlocksAmountToSpawn = 5;
+    if (timer % 3 === 0) {
         const spawnCoef = Math.floor(Math.random() * (maxBlocksAmountToSpawn - minBlocksAmountToSpawn + 1));
         for (let i = 0; i < spawnCoef; i++) {
             generateBlock();
         }
     }
 
-    if (timer === 0) { 
+    if (timer === 0) {
         window.clearInterval(testTimer);
 
         const playerName = prompt("The game is over, your score is: " + totalScore, "Player");
@@ -120,25 +119,24 @@ function timerFunc() {
 
 function sendGameStats(name, score) {
     $.ajax({
-        url: 'http://localhost:8082/',
+        url: 'http://localhost:8083/',
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify({[name]: score}),
+        data: JSON.stringify({name, score}),
     });
 }
 
 function renderScoreboardTable() {
-    $.getJSON('http://localhost:8082/json/results.json', function(data){
-      const items = ['<h5>Scoreboard</h5>'];
+    $.get('http://localhost:8083/scoreboard', function(scoreboardData) {
+          const items = ['<h5>Scoreboard</h5>'];
 
-      $.each(data, function(key, val) {
-        items.push('<ul id="score">' + (key+1+'.') + ' ' + val +'</ul>');
-      });
-      $('<li/>', {
-        'id': 'result',
-        html: items.join('')
-      }).appendTo('body');
-
+          $.each(scoreboardData, (key, value) => {
+            items.push('<ul id="score">' + `${value.name}: ${value.score}` +'</ul>');
+          });
+          $('<li/>', {
+            'id': 'result',
+            html: items.join('')
+          }).appendTo('body');
     });
 }
 

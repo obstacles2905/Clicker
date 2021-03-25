@@ -1,23 +1,22 @@
 const express = require("express");
-const bodyParser = require('body-parser');
-const router = require('./src/routes/gameRouter');
-// require("dotenv").config({path: ".env"});
+const bodyParser = require("body-parser");
+const router = require("./src/routes/clickerRouter");
+require("dotenv").config({path: ".env"});
 
-const port = 8082;
+const port = process.env.APPLICATION_PORT;
 
 const app = express();
-app.use(express.static('public'));
+app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use("/", router);
 
 app.listen(port, () => {
-    console.log("////////////a", process.env.APPLICATION_PORT);
   console.info(`Server is running on ${port}`);
 });
 
-const sigs = ['SIGINT', 'SIGTERM', 'SIGQUIT'];
+const sigs = ["SIGINT", "SIGTERM", "SIGQUIT"];
 sigs.forEach((sig) => {
     process.on(sig, () => {
         console.info(`${sig} called, shutdown application`)
@@ -25,8 +24,4 @@ sigs.forEach((sig) => {
             process.exit(0);
         });
     });
-});
-
-process.on("error", () => {
-    process.exit(0);
 });
