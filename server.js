@@ -19,7 +19,7 @@ app.listen(port, () => {
 const sigs = ["SIGINT", "SIGTERM", "SIGQUIT"];
 sigs.forEach((sig) => {
     process.on(sig, () => {
-        console.info(`${sig} called, shutdown application`)
+        console.info(`${sig} called, shutdown application`);
         app.close(() => {
             process.exit(0);
         });
