@@ -1,11 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const PostgresProvider = require("../database/postgresProvider");
+const logger = require("../logger");
 
 router.get("/", (request, response) => {
-    let clickerFilePath = "./public/index.html";
+    const htmlFilePath = "./public/index.html";
 
-    const readStream = fs.createReadStream(clickerFilePath);
+    const readStream = fs.createReadStream(htmlFilePath);
 
     readStream.on("error", () => {
         response.statusCode = 404;
@@ -16,7 +17,7 @@ router.get("/", (request, response) => {
 });
 
 router.get("/scoreboard", async (request, response) => {
-    console.info("Handling /scoreboard endpoint");
+    logger.info({message: "Handling GET /scoreboard endpoint"});
     const postgresProvider = new PostgresProvider();
     const top10Scores = await postgresProvider.getTop10Scores();
 

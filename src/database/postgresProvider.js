@@ -1,4 +1,5 @@
 const {Client} = require("pg");
+const logger = require("../logger");
 
 class PostgresProvider {
     constructor() {
@@ -17,17 +18,11 @@ class PostgresProvider {
     }
 
     async getTop10Scores() {
-        const scoreboardData = await this.getScoreboardData();
-        return scoreboardData
-            .sort((a, b) => b.score - a.score)
-            .slice(0, 9);
-    };
-
-    async getScoreboardData() {
         try {
-            const scoreboardData = await this.client.query(`SELECT * FROM ${this.scoreboardTable}`);
-            return scoreboardData.rows;
+            const top10Scores = await this.client.query(`SELECT * FROM ${this.scoreboardTable} ORDER BY score DESC LIMIT 10`);
+            return top10Scores.rows;
         } catch(err) {
+            logger.error(err);
             throw err;
         }
     }
@@ -35,8 +30,9 @@ class PostgresProvider {
     async sendDataToScoreboardTable(data) {
         try {
             await this.client.query(`INSERT INTO ${this.scoreboardTable} (name, score) VALUES ('${data.name}', '${data.score}')`);
-            console.log("Scoreboard data has been successfully sent");
+            logger.info("Scoreboard data has been successfully sent");
         } catch(err) {
+            logger.error(err);
             throw err;
         }
     }
