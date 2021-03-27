@@ -1,5 +1,5 @@
 TODO LIST: 
-1. migration for creating a scoreboard table
+1. migration for creating a scoreboard table (DONE)
 2. logger
 3. units
 4. typescript
