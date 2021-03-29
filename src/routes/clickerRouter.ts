@@ -1,9 +1,11 @@
-const express = require("express");
-const router = express.Router();
-const PostgresProvider = require("../database/postgresProvider");
-const logger = require("../logger");
+import express from "express";
+import * as fs from "fs";
+import {logger} from "../logger";
+import {IScoreboardData, PostgresProvider} from "../database/postgresProvider";
 
-router.get("/", (request, response) => {
+export const router = express.Router();
+
+router.get("/", (request: Request, response: any) => {
     const htmlFilePath = "./public/index.html";
 
     const readStream = fs.createReadStream(htmlFilePath);
@@ -16,7 +18,7 @@ router.get("/", (request, response) => {
     readStream.pipe(response);
 });
 
-router.get("/scoreboard", async (request, response) => {
+router.get("/scoreboard", async (request: any, response: any) => {
     logger.info({message: "Handling GET /scoreboard endpoint"});
     const postgresProvider = new PostgresProvider();
     const top10Scores = await postgresProvider.getTop10Scores();
@@ -24,9 +26,7 @@ router.get("/scoreboard", async (request, response) => {
     return response.send(top10Scores);
 });
 
-router.post("/", async (request) => {
+router.post("/", async (request: Request) => {
     const postgresProvider = new PostgresProvider();
-    await postgresProvider.sendDataToScoreboardTable(request.body);
+    await postgresProvider.sendDataToScoreboardTable(request.body as any as IScoreboardData);
 });
-
-module.exports = router;

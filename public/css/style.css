@@ -2,6 +2,17 @@
     position: relative;
     height: 300px;
 }
+
+#scoreboard {
+    font-size: 20px;
+    text-align: center;
+    display: inline-block;
+}
+
+#instructions {
+    display: inline-block;
+}
+
 .start {
    position: absolute;
    margin: 0px auto;
@@ -43,7 +54,7 @@
     
 }
 /*labels*/
-#total_score {
+#totalScore {
     position: absolute;
     margin: 0px auto;
     top: 70%;
@@ -74,7 +85,6 @@ h1 {
     top: 5%;
 }
 #result {
-
     background-color: #ffcdd2;
     position: absolute;
     top: 1%;
@@ -87,8 +97,4 @@ h1 {
     border: 2px double black;
     padding: 7px;
     font-size: 16px;
-}
-#scoreboard {
-    font-size: 20px;
-    text-align: center;
 }

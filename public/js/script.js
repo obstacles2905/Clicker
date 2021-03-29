@@ -108,7 +108,7 @@ function timerFunc() {
 
         renderScoreboardTable();
 
-        reset();
+        resetScoreAndTimer();
 
         document.getElementById("totalScore").innerText = totalScore;
         document.getElementById("timer").innerText = timer;
@@ -140,7 +140,7 @@ function renderScoreboardTable() {
     });
 }
 
-function reset() {
+function resetScoreAndTimer() {
     totalScore = 0;
     timer = 60;
 }
