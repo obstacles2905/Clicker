@@ -22,4 +22,4 @@ RUN npm ci --quiet --only=production
 COPY . .
 
 EXPOSE 8083
-CMD ["node", "/app/build/server.js"]
+CMD ["node", "./dist/server.js"]
