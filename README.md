@@ -30,9 +30,8 @@ TODO LIST:
 1. migration for creating a scoreboard table (DONE)
 2. logger (DONE)
 3. finish readme (DONE)
-4. add description to the frontend describing how many points different blocks cost
-5. typescript
+5. typescript (DONE)
 6. migrate frontend to vue.js
 7. html fixes (points positioning, fonts, responsive design)
-8. build docker image
+8. build docker image (DONE)
 9. build kuber pod and operate it
