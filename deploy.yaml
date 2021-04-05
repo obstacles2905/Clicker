@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clicker
+spec:
+  selector:
+    matchLabels:
+      app: clicker
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: clicker
+    spec:
+      containers:
+        - name: clicker
+          image: "obstacles2905/clicker:1.0"
+          ports:
+            - containerPort: 8083

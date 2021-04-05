@@ -34,4 +34,4 @@ TODO LIST:
 6. migrate frontend to vue.js
 7. html fixes (points positioning, fonts, responsive design)
 8. build docker image (DONE)
-9. build kuber pod and operate it
+9. build kuber pod and operate it (DONE)
